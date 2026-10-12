@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Работы студентов{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">Поступившие работы</h1>
+        <p class="text-secondary mb-0">Просматривайте материалы студентов и переходите к проверке.</p>
+    </div>
+    <form method="get" class="d-flex gap-2">
+        {{ filter_form.status }}
+        <button type="submit" class="btn btn-outline-primary">Фильтровать</button>
+    </form>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        {% if works %}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Студент</th>
+                        <th>Дата загрузки</th>
+                        <th>Статус</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for work in works %}
+                        <tr>
+                            <td>{{ work.title }}</td>
+                            <td>{{ work.student }}</td>
+                            <td>{{ work.created_at|date:"d.m.Y H:i" }}</td>
+                            <td><span class="badge status-{{ work.status }}">{{ work.get_status_display }}</span></td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'works:detail' work.pk %}">Сведения</a>
+                                <a class="btn btn-sm btn-primary" href="{% url 'works:review' work.pk %}">Проверить</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state text-center py-5">
+                <h2 class="h5">Работ с выбранным фильтром нет</h2>
+                <p class="text-secondary mb-0">Измените статус или дождитесь новых загрузок от студентов.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+:root {
+    --app-blue: #1d4ed8;
+    --app-blue-dark: #1e3a8a;
+    --app-bg: #f4f7fb;
+}
+
+body {
+    background: var(--app-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #1e2937;
+}
+
+main {
+    flex: 1;
+}
+
+.app-navbar {
+    background: linear-gradient(90deg, var(--app-blue-dark), var(--app-blue));
+}
+
+.app-footer {
+    background: #e8eef7;
+    color: #64748b;
+    margin-top: auto;
+}
+
+.hero-card {
+    background: linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
+}
+
+.btn-primary {
+    background-color: var(--app-blue);
+    border-color: var(--app-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--app-blue-dark);
+    border-color: var(--app-blue-dark);
+}
+
+.card {
+    border-radius: 0.85rem;
+}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ work.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    {% if user.is_teacher %}
+        <a href="{% url 'works:teacher_works' %}" class="text-decoration-none">&larr; К списку работ</a>
+    {% else %}
+        <a href="{% url 'works:dashboard' %}" class="text-decoration-none">&larr; В кабинет</a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex flex-wrap justify-content-between gap-3">
+            <div>
+                <h1 class="h3 mb-2">{{ work.title }}</h1>
+                <p class="text-secondary mb-1">Студент: {{ work.student }}</p>
+                <p class="text-secondary mb-0">Загружено: {{ work.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+            <div>
+                <span class="badge status-{{ work.status }} fs-6">{{ work.get_status_display }}</span>
+            </div>
+        </div>
+        {% if work.description %}
+            <hr>
+            <h2 class="h6">Описание</h2>
+            <p class="mb-0">{{ work.description|linebreaksbr }}</p>
+        {% endif %}
+        <hr>
+        <p class="mb-2"><strong>Файл:</strong> {{ work.original_filename }}</p>
+        <a class="btn btn-outline-primary" href="{% url 'works:download' work.pk %}">Скачать файл</a>
+        {% if user.is_teacher %}
+            <a class="btn btn-primary" href="{% url 'works:review' work.pk %}">Проверить работу</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+        <h2 class="h5 mb-3">Комментарии преподавателей</h2>
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment-item mb-3">
+                    <div class="fw-semibold">{{ comment.teacher }}</div>
+                    <div class="small text-secondary mb-1">{{ comment.created_at|date:"d.m.Y H:i" }}</div>
+                    <p class="mb-0">{{ comment.text|linebreaksbr }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-secondary mb-0">Комментариев пока нет.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

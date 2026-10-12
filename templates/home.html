@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Главная · СтудРаботы{% endblock %}
+
+{% block content %}
+<section class="hero-card card shadow-sm border-0">
+    <div class="card-body p-4 p-md-5">
+        <p class="text-uppercase small text-primary fw-semibold mb-2">Университетский сервис</p>
+        <h1 class="display-6 fw-semibold mb-3">Веб-сервис обработки студенческих работ</h1>
+        <p class="lead text-secondary mb-4">
+            Передавайте учебные материалы преподавателям, отслеживайте статус проверки
+            и получайте комментарии в личном кабинете.
+        </p>
+        {% if user.is_authenticated %}
+            <div class="d-flex flex-wrap gap-2">
+                {% if user.is_student %}
+                    <a class="btn btn-primary btn-lg" href="{% url 'works:dashboard' %}">Перейти в кабинет</a>
+                    <a class="btn btn-outline-primary btn-lg" href="{% url 'works:upload' %}">Загрузить работу</a>
+                {% elif user.is_teacher %}
+                    <a class="btn btn-primary btn-lg" href="{% url 'works:teacher_works' %}">Открыть поступившие работы</a>
+                {% else %}
+                    <a class="btn btn-primary btn-lg" href="{% url 'admin:index' %}">Открыть панель администратора</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-lg" href="{% url 'accounts:login' %}">Войти</a>
+                <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:register' %}">Зарегистрироваться</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Для студентов</h2>
+                <p class="text-secondary mb-0">Загружайте PDF и DOCX, следите за статусом и читайте замечания преподавателя.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Для преподавателей</h2>
+                <p class="text-secondary mb-0">Просматривайте поступившие работы, оставляйте комментарии и фиксируйте результат проверки.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Прозрачный процесс</h2>
+                <p class="text-secondary mb-0">Каждая работа проходит путь от загрузки до проверки с понятными статусами.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

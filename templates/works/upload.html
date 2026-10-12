@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка работы{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Загрузить работу</h1>
+                <p class="text-secondary">Укажите название, при необходимости добавьте описание и приложите файл PDF или DOCX.</p>
+                <form method="post" enctype="multipart/form-data" id="upload-form" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <p id="file-hint" class="small text-secondary"></p>
+                    <button type="submit" class="btn btn-primary">Отправить на проверку</button>
+                    <a class="btn btn-outline-secondary" href="{% url 'works:dashboard' %}">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Сервис студенческих работ{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" href="{% url 'home' %}">СтудРаботы</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'works:dashboard' %}">Кабинет</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'works:upload' %}">Загрузить работу</a></li>
+                    {% endif %}
+                    {% if user.is_teacher %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'works:teacher_works' %}">Работы студентов</a></li>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Администрирование</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                {% if user.is_authenticated %}
+                    <li class="nav-item me-lg-3">
+                        <span class="navbar-text text-white-50">{{ user.get_full_name|default:user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'accounts:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Вход</a></li>
+                    <li class="nav-item"><a class="btn btn-light btn-sm ms-lg-2" href="{% url 'accounts:register' %}">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="app-footer">
+    <div class="container text-center py-3">
+        <small>Веб-сервис обработки студенческих работ · Курсовая работа Мухачев Кирилл ИКБО-15-23</small>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

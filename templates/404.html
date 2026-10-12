@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Страница не найдена{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+    <div class="card-body p-5 text-center">
+        <h1 class="h3">Страница не найдена</h1>
+        <p class="text-secondary">Запрашиваемая работа или страница не существует.</p>
+        <a class="btn btn-primary" href="{% url 'home' %}">На главную</a>
+    </div>
+</div>
+{% endblock %}

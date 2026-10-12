@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Проверка: {{ work.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'works:teacher_works' %}" class="text-decoration-none">&larr; К списку работ</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">{{ work.title }}</h1>
+                <p><strong>Студент:</strong> {{ work.student }}</p>
+                <p><strong>Загружено:</strong> {{ work.created_at|date:"d.m.Y H:i" }}</p>
+                <p><strong>Текущий статус:</strong>
+                    <span class="badge status-{{ work.status }}">{{ work.get_status_display }}</span>
+                </p>
+                {% if work.description %}
+                    <p><strong>Описание:</strong><br>{{ work.description|linebreaksbr }}</p>
+                {% endif %}
+                <p><strong>Файл:</strong> {{ work.original_filename }}</p>
+                <a class="btn btn-outline-primary" href="{% url 'works:download' work.pk %}">Скачать файл</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-3">Результат проверки</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Сохранить проверку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body p-4">
+        <h2 class="h5 mb-3">История комментариев</h2>
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment-item mb-3">
+                    <div class="fw-semibold">{{ comment.teacher }}</div>
+                    <div class="small text-secondary mb-1">{{ comment.created_at|date:"d.m.Y H:i" }}</div>
+                    <p class="mb-0">{{ comment.text|linebreaksbr }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-secondary mb-0">Комментариев пока нет.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
