@@ -115,37 +115,3 @@ python manage.py test
 ## Ограничения загрузки файлов
 
 Разрешены только `.pdf` и `.docx`. Максимальный размер задаётся параметром `MAX_UPLOAD_SIZE` в `config/settings.py` (по умолчанию 10 МБ). Измените это значение в одном месте, если нужен другой лимит.
-
-## Публикация
-
-- **GitHub Pages** — статическая витрина: <https://gloryspb.github.io/stud-works/>
-- **Render** — рабочий Django-сервис (gunicorn). После первого деплоя адрес будет вида `https://stud-works-gloryspb.onrender.com`
-
-GitHub Actions (`.github/workflows/ci-cd.yml`):
-
-1. **CI** — `manage.py check` и тесты.
-2. **CD Pages** — публикация каталога `pages/` на GitHub Pages.
-3. **CD Render** — вызов Deploy Hook, если в секретах репозитория задан `RENDER_DEPLOY_HOOK`.
-
-### Render
-
-1. Войдите на [render.com](https://render.com) и подключите репозиторий `gloryspb/stud-works`.
-2. Создайте Web Service (Python) или примените Blueprint из `render.yaml`.
-3. Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
-4. Start: `python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`
-5. В Settings сервиса скопируйте Deploy Hook и сохраните его в GitHub: `Settings → Secrets and variables → Actions → RENDER_DEPLOY_HOOK`.
-6. При необходимости задайте переменную репозитория `RENDER_URL` (точный URL сервиса) — она подставится в витрину Pages.
-
-На бесплатном плане диск эфемерный: SQLite и загруженные файлы могут пропадать после перезапуска.
-
-### GitHub Pages
-
-В репозитории: `Settings → Pages → Source: GitHub Actions`. После пуша в `main` workflow сам опубликует сайт.
-
-## Безопасность (учебный контур)
-
-- пароли хранятся только в виде хэшей Django;
-- формы защищены CSRF;
-- доступ к кабинетам, файлам и проверке контролируется на сервере;
-- файлы не отдаются по прямым публичным ссылкам, а только через представление с проверкой прав;
-- каталог `media/`, база SQLite и виртуальное окружение исключены из Git.
